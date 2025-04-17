@@ -1,8 +1,6 @@
-
-
 export type SpotifyLikerJob = {
-    email: string;
-    username: string;
-    accessToken: string;
-    lockUserKey: string;
-}
+  email: string;
+  username: string;
+  accessToken: string;
+  lockUserKey: string;
+};

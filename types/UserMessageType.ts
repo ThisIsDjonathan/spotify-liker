@@ -1,4 +1,3 @@
-
 export enum UserMessageType {
   USER_LOCKED,
   ALREADY_PROCESSED,

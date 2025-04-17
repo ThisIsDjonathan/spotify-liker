@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { UserMessageType } from "@/types/UserMessageType"
+import { UserMessageType } from "@/types/UserMessageType";
 
 export function buildUserMessage(
   messageType: UserMessageType,
-  data: any
+  data: any,
 ): string {
   switch (messageType) {
     case UserMessageType.USER_LOCKED:
@@ -24,7 +24,7 @@ export function buildUserMessage(
 export function buildEmailMessage(
   userName: string,
   playlistCount: number,
-  songsCount: number
+  songsCount: number,
 ): string {
   return `Hey ${userName},\n\nWe just wanted to let you know that we've successfully liked all the songs in your ${playlistCount} playlists, totaling ${songsCount} songs. 🎉\n\nThanks for using our service!\n\nBest,\nThe Team`;
 }

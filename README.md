@@ -40,3 +40,4 @@ REDIS_PORT=6379
 3. Run the following command to start the services:
    ```bash
    docker-compose up --build
+   ```

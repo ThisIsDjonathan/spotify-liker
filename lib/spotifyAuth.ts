@@ -52,7 +52,7 @@ export async function exchangeCodeForTokens(code: string) {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       Authorization: `Basic ${Buffer.from(
-        `${CLIENT_ID}:${CLIENT_SECRET}`
+        `${CLIENT_ID}:${CLIENT_SECRET}`,
       ).toString("base64")}`,
     },
     body: params.toString(),
@@ -77,7 +77,7 @@ async function refreshAccessToken(refreshToken: string) {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       Authorization: `Basic ${Buffer.from(
-        `${CLIENT_ID}:${CLIENT_SECRET}`
+        `${CLIENT_ID}:${CLIENT_SECRET}`,
       ).toString("base64")}`,
     },
     body: params.toString(),
@@ -107,7 +107,7 @@ async function verifySessionToken(token: string) {
   try {
     const { payload } = await jwtVerify(
       token,
-      new TextEncoder().encode(JWT_SECRET)
+      new TextEncoder().encode(JWT_SECRET),
     );
     return payload;
   } catch (error) {
@@ -149,7 +149,7 @@ export async function getSpotifyApi() {
   if (typeof session.expires_at === "number" && session.expires_at < now) {
     try {
       const refreshedTokens = await refreshAccessToken(
-        session.refresh_token as string
+        session.refresh_token as string,
       );
 
       // Update the session with new tokens

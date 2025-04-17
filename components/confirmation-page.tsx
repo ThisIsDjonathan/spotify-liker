@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function ConfirmationPage({ email }: { email: string }) {
   const [userMessage, setUserMessage] = useState<string>(
-    "We're liking all songs in your playlists in the background."
+    "We're liking all songs in your playlists in the background.",
   );
   const [progress, setProgress] = useState<number>(0);
   const [playlistCount, setPlaylistCount] = useState<number>(0);
@@ -63,7 +63,7 @@ export default function ConfirmationPage({ email }: { email: string }) {
             return;
           }
           throw new Error(
-            responseBody.userMessage || "Failed to start background process"
+            responseBody.userMessage || "Failed to start background process",
           );
         }
 
@@ -71,7 +71,7 @@ export default function ConfirmationPage({ email }: { email: string }) {
         const count = responseBody.playlistCount || 0;
         setPlaylistCount(count);
         setUserMessage(
-          (prevMessage) => responseBody.userMessage || prevMessage
+          (prevMessage) => responseBody.userMessage || prevMessage,
         );
       } catch (error) {
         console.error("Error starting background process:", error);

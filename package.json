@@ -7,12 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:prettier:check": "prettier --check .",
+    "lint:prettier:fix": "prettier --write .",
     "services:up": "docker-compose -f infra-local/docker-compose.yml up -d",
     "services:build": "docker-compose -f infra-local/docker-compose.yml up --build -d",
     "services:down": "docker-compose -f infra-local/docker-compose.yml down",
     "redis:cli": "docker exec -it spotify-liker-redis redis-cli -h redis"
   },
   "dependencies": {
+    "@types/nodemailer": "^6.4.17",
     "bullmq": "^5.49.0",
     "clsx": "^2.1.1",
     "framer-motion": "latest",
@@ -22,6 +25,7 @@
     "next": "15.2.4",
     "next-themes": "^0.4.4",
     "nodemailer": "^6.10.1",
+    "prettier": "^3.5.3",
     "react": "^19",
     "spotify-web-api-node": "^5.0.2",
     "tailwind-merge": "^2.5.5",

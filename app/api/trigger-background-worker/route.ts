@@ -15,7 +15,7 @@ export async function POST() {
   if (!spotifyApi?.email || !spotifyApi?.accessToken) {
     return NextResponse.json(
       { error: "Invalid Spotify API credentials" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -37,7 +37,7 @@ export async function POST() {
   await queueService.enqueueJob(
     spotifyApi.email,
     username,
-    spotifyApi.accessToken
+    spotifyApi.accessToken,
   );
   const response = {
     userMessage: buildUserMessage(UserMessageType.ADDED_TO_QUEUE, {

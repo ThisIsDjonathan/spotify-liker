@@ -8,7 +8,7 @@ export class QueueService {
   private redisClient: Redis;
   public QUEUE_NAME = "like-songs-queue";
   //public USER_LOCKED_FOR_SECONDS = 24 * 60 * 60; // 24 hours
-  public USER_LOCKED_FOR_SECONDS = 60
+  public USER_LOCKED_FOR_SECONDS = 60;
 
   constructor() {
     if (!process.env.REDIS_HOST) {
@@ -39,7 +39,11 @@ export class QueueService {
     return keys;
   }
 
-  async enqueueJob(email: string, username: string, accessToken: string): Promise<Job<SpotifyLikerJob> | null> {
+  async enqueueJob(
+    email: string,
+    username: string,
+    accessToken: string,
+  ): Promise<Job<SpotifyLikerJob> | null> {
     if (!email || !accessToken) {
       throw new Error("Email and access token are required to enqueue a job.");
     }
@@ -67,7 +71,12 @@ export class QueueService {
 
   async lockUser(email: string): Promise<string | null> {
     const redisKey = this.buildLockRedisKey(email);
-    const record = await this.redisClient.set(redisKey, "locked", "EX", this.USER_LOCKED_FOR_SECONDS);
+    const record = await this.redisClient.set(
+      redisKey,
+      "locked",
+      "EX",
+      this.USER_LOCKED_FOR_SECONDS,
+    );
     return record;
   }
 

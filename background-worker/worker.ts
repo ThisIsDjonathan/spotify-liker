@@ -22,22 +22,26 @@ const worker = new Worker(
       const result = await spotifyService.likeAll(email);
 
       console.log(
-        `Successfully processed ${result.playlistCount} playlists and ${result.songsCount} tracks for user: ${email}`
+        `Successfully processed ${result.playlistCount} playlists and ${result.songsCount} tracks for user: ${email}`,
       );
 
       const emailSubject = buildEmailSubject();
-      const emailMessage = buildEmailMessage(username, result.playlistCount, result.songsCount);
+      const emailMessage = buildEmailMessage(
+        username,
+        result.playlistCount,
+        result.songsCount,
+      );
       await emailService.sendEmail(email, emailSubject, emailMessage);
     } catch (error) {
       console.error(
         `Failed to process job ID: ${job.id} for user: ${email}`,
-        error
+        error,
       );
     }
   },
   {
     connection: queueService.getConnection(),
-  }
+  },
 );
 
 // Handle worker events

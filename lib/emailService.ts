@@ -11,7 +11,7 @@ export class EmailService {
       !process.env.SMTP_PASSWORD
     ) {
       throw new Error(
-        "SMTP configuration is missing. Please set SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASSWORD in your environment variables."
+        "SMTP configuration is missing. Please set SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASSWORD in your environment variables.",
       );
     }
 
@@ -30,7 +30,7 @@ export class EmailService {
     to: string,
     subject: string,
     text: string,
-    html?: string
+    html?: string,
   ): Promise<void> {
     try {
       const mailOptions = {
