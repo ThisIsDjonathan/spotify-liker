@@ -32,7 +32,7 @@ This project uses:
 
 1. Clone the repo and create your local environment file:
    ```bash
-   cp .env.example .env.development
+   cp .env.example .env.example
 2. Install all dependencies:
    ```bash
    bun install
