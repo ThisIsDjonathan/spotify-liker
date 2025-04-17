@@ -45,7 +45,7 @@ class SpotifyService {
         break;
       }
       try {
-        await this.processPlaylist(playlist);
+        songsCount += await this.processPlaylist(playlist);
       } catch (error) {
         console.error(`Error processing playlist ${playlist.name}`, error);
         continue;
