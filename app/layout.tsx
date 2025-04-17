@@ -15,6 +15,22 @@ const montserrat = Montserrat({
 export const metadata = {
   title: "Spotify Liker",
   description: "Like all songs in your Spotify playlists with one click",
+  icons: {
+    icon: "/favicon.png",
+  },
+  openGraph: {
+    title: "Spotify Liker",
+    description: "Like all songs in your Spotify playlists with one click",
+    url: "https://spotifyliker.com",
+    siteName: "Spotify Liker",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
