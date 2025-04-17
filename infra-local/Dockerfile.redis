@@ -1,8 +1,0 @@
-# Use the official Redis image as the base
-FROM redis:7
-
-# Expose the default Redis port
-EXPOSE 6379
-
-# Default command to run Redis
-CMD ["redis-server"]
