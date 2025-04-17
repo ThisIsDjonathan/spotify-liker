@@ -2,12 +2,31 @@ import { cookies } from "next/headers";
 import { jwtVerify, SignJWT } from "jose";
 
 // Environment variables
-const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID || "";
-const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET || "";
-const REDIRECT_URI =
-  process.env.NEXT_PUBLIC_REDIRECT_URI ||
-  "http://localhost:3000/api/auth/callback";
-const JWT_SECRET = process.env.JWT_SECRET || "spotify-liker-secret-key";
+const requiredEnvVars = [
+  "SPOTIFY_CLIENT_ID",
+  "SPOTIFY_CLIENT_SECRET",
+  "NEXT_PUBLIC_REDIRECT_URI",
+  "JWT_SECRET",
+  "NEXT_PUBLIC_REDIRECT_URI",
+  "JWT_EXPIRATION",
+  "COOKIE_MAX_AGE",
+];
+
+const missingVars = requiredEnvVars.filter((key) => !process.env[key]);
+
+if (missingVars.length > 0) {
+  throw new Error(
+    `Missing required environment variables: ${missingVars.join(", ")}`
+  );
+}
+
+
+const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID!;
+const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET!;
+const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI!;
+const JWT_SECRET = process.env.JWT_SECRET!;
+const JWT_EXPIRATION = process.env.JWT_EXPIRATION!;
+const COOKIE_MAX_AGE = process.env.COOKIE_MAX_AGE!;
 
 // Scopes needed for the application
 const SPOTIFY_SCOPES = [
@@ -29,7 +48,7 @@ export function generateRandomState() {
 // Get the Spotify authorization URL
 export function getAuthorizationUrl(state: string) {
   const params = new URLSearchParams({
-    client_id: CLIENT_ID,
+    client_id: SPOTIFY_CLIENT_ID,
     response_type: "code",
     redirect_uri: REDIRECT_URI,
     state,
@@ -52,7 +71,7 @@ export async function exchangeCodeForTokens(code: string) {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       Authorization: `Basic ${Buffer.from(
-        `${CLIENT_ID}:${CLIENT_SECRET}`,
+        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`,
       ).toString("base64")}`,
     },
     body: params.toString(),
@@ -77,7 +96,7 @@ async function refreshAccessToken(refreshToken: string) {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       Authorization: `Basic ${Buffer.from(
-        `${CLIENT_ID}:${CLIENT_SECRET}`,
+        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`,
       ).toString("base64")}`,
     },
     body: params.toString(),
@@ -96,7 +115,7 @@ export async function createSessionToken(payload: any) {
   const token = await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("1h")
+    .setExpirationTime(JWT_EXPIRATION)
     .sign(new TextEncoder().encode(JWT_SECRET));
 
   return token;
@@ -111,7 +130,9 @@ async function verifySessionToken(token: string) {
     );
     return payload;
   } catch (error) {
-    console.error(error);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Failed to verify session token:", error);
+    }
     return null;
   }
 }
@@ -169,7 +190,8 @@ export async function getSpotifyApi() {
       // Example using 'cookie' library:
       const cookieHeader = `session_token=${newSessionToken}; HttpOnly; Secure=${
         process.env.NODE_ENV === "production"
-      }; SameSite=Lax; Path=/; Max-Age=${30 * 24 * 60 * 60}`;
+      }; SameSite=Lax; Path=/; Max-Age=${COOKIE_MAX_AGE}`;
+
       // Add this header to your response object in your API route
       console.log("Set-Cookie:", cookieHeader);
 
@@ -179,7 +201,9 @@ export async function getSpotifyApi() {
         email: session.email,
       };
     } catch (error) {
-      console.error("Failed to refresh token:", error);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Failed to refresh token:", error);
+      }
       return null;
     }
   }
