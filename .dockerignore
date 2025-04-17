@@ -1,0 +1,11 @@
+app
+components
+infra-local
+public
+styles
+tests
+node_modules
+.git
+.gitignore
+Dockerfile
+docker-compose.yml

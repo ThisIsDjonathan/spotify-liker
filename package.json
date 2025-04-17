@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "start:worker": "bun background-worker/worker.ts",
+    "start:worker:prod": "docker-compose -f infra-prod/docker-compose.yml up -d",
     "services:up": "docker-compose -f infra-local/docker-compose.yml up -d",
     "services:down": "docker-compose -f infra-local/docker-compose.yml down",
     "redis:cli": "docker exec -it spotify-liker-redis redis-cli -h redis",

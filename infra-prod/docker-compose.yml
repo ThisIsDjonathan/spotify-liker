@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  worker:
+    build:
+      context: ../
+      dockerfile: infra-prod/Dockerfile
+    container_name: spotify-liker-worker
+    env_file:
+      - ../.env.production
+    command: ["bun", "background-worker/worker.ts"]
