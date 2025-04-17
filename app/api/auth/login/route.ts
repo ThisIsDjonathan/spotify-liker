@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { cookies } from "next/headers"
 import { generateRandomState, getAuthorizationUrl } from "@/lib/spotifyAuth"
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: NextRequest) {
   // Generate a random state for OAuth security
   const state = generateRandomState()

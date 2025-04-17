@@ -89,6 +89,7 @@ class SpotifyService {
     try {
       await this.spotifyApi.addToMySavedTracks(trackIds);
       console.log(`Saved ${trackIds.length} tracks to the user's library.`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.statusCode === 429) {
         const retryAfter = error.headers["retry-after"];

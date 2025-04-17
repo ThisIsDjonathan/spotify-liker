@@ -70,10 +70,14 @@ export default function ConfirmationPage({ email }: { email: string }) {
         const responseBody = await response.json();
         const count = responseBody.playlistCount || 0;
         setPlaylistCount(count);
-        setUserMessage(responseBody.userMessage || userMessage);
-      } catch (error: any) {
+        setUserMessage(
+          (prevMessage) => responseBody.userMessage || prevMessage
+        );
+      } catch (error) {
         console.error("Error starting background process:", error);
-        setUserMessage(error.message || "An error occurred 😱");
+        const errorMsg =
+          error instanceof Error ? error.message : "An error occurred 😱";
+        setUserMessage(errorMsg);
       }
     };
 
@@ -120,8 +124,9 @@ export default function ConfirmationPage({ email }: { email: string }) {
             <>
               <p>{userMessage}</p>
               <p>
-                You'll receive an email at{" "}
-                <span className="text-[#1ED760]">{email}</span> when it's done.
+                You&apos;ll receive an email at{" "}
+                <span className="text-[#1ED760]">{email}</span> when it&apos;s
+                done.
               </p>
 
               {playlistCount > 0 && (

@@ -1,10 +1,5 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserMessageType } from "@/types/UserMessageType"
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
 
 export function buildUserMessage(
   messageType: UserMessageType,

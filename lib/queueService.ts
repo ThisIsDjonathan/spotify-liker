@@ -1,5 +1,7 @@
 import { Queue } from "bullmq";
 import { Redis } from "ioredis";
+import { SpotifyLikerJob } from "@/types/Job";
+import { Job } from "bullmq";
 
 export class QueueService {
   private queue: Queue;
@@ -37,7 +39,7 @@ export class QueueService {
     return keys;
   }
 
-  async enqueueJob(email: string, accessToken: string): Promise<any> {
+  async enqueueJob(email: string, username: string, accessToken: string): Promise<Job<SpotifyLikerJob> | null> {
     if (!email || !accessToken) {
       throw new Error("Email and access token are required to enqueue a job.");
     }
@@ -45,13 +47,14 @@ export class QueueService {
     const userLocked = await this.isUserLocked(email);
     if (userLocked) {
       console.log(`User ${email} is already locked. Skipping job enqueue.`);
-      return;
+      return null;
     } else {
       await this.lockUser(email);
     }
 
     const jobData = {
       email,
+      username,
       accessToken,
       lockUserKey: this.buildLockRedisKey(email),
     };
@@ -62,7 +65,7 @@ export class QueueService {
     return newJob;
   }
 
-  async lockUser(email: string): Promise<any> {
+  async lockUser(email: string): Promise<string | null> {
     const redisKey = this.buildLockRedisKey(email);
     const record = await this.redisClient.set(redisKey, "locked", "EX", this.USER_LOCKED_FOR_SECONDS);
     return record;
