@@ -7,7 +7,9 @@ services:
     ports:
       - "6379:6379"
     environment:
-      ALLOW_EMPTY_PASSWORD: "yes" # Allow Redis to run without a password for local testing
+      ALLOW_EMPTY_PASSWORD: "yes"
+    command: ["redis-server", "--maxmemory-policy", "noeviction"]
+
   mongodb:
     image: mongo:6
     container_name: spotify-liker-mongodb
