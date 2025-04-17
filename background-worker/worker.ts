@@ -3,9 +3,11 @@ import { QueueService } from "@/lib/queueService";
 import { SpotifyService } from "@/lib/spotifyService";
 import { EmailService } from "@/lib/emailService";
 import { buildEmailMessage, buildEmailSubject } from "@/lib/utils";
+import { MongoDbService } from "@/lib/mongoDbService";
 
 const queueService = new QueueService();
 const emailService = new EmailService();
+const mongoDbService = new MongoDbService();
 
 console.log("Starting background worker...");
 
@@ -32,6 +34,13 @@ const worker = new Worker(
         result.songsCount,
       );
       await emailService.sendEmail(email, emailSubject, emailMessage);
+
+      await mongoDbService.saveResults(
+        email,
+        username,
+        result.playlistCount,
+        result.songsCount,
+      );
     } catch (error) {
       console.error(
         `Failed to process job ID: ${job.id} for user: ${email}`,
