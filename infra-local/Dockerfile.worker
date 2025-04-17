@@ -1,0 +1,19 @@
+FROM oven/bun:1.0.0
+
+# Set the working directory
+WORKDIR /app
+
+# Copy only necessary files for dependency installation
+COPY ../package.json ../bun.lock ../tsconfig.json ./
+
+# Install dependencies using Bun
+RUN bun install
+
+# Copy the entire project directory into the container
+COPY ../ ./
+
+# Expose Redis port (optional for debugging)
+EXPOSE 6379
+
+# Default command to debug and run the worker
+CMD ["bun", "./background-worker/worker.ts"]

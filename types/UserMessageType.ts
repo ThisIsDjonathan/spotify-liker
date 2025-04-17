@@ -1,0 +1,8 @@
+
+export enum UserMessageType {
+  USER_LOCKED,
+  ALREADY_PROCESSED,
+  NO_PLAYLISTS,
+  ADDED_TO_QUEUE,
+  ERROR,
+}
