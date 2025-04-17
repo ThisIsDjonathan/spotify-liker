@@ -1,6 +1,6 @@
 import { Queue } from "bullmq";
 import { Redis } from "ioredis";
-import { SpotifyLikerJob } from "@/types/Job";
+import { SpotifyLikerJob } from "@/types/SpotifyLikerJob";
 import { Job } from "bullmq";
 
 export class QueueService {
@@ -23,7 +23,7 @@ export class QueueService {
       this.redisClient = new Redis(process.env.REDIS_HOST!);
     }
 
-    this.queue = new Queue("like-songs-queue", {
+    this.queue = new Queue(this.QUEUE_NAME, {
       connection: {
         host: process.env.REDIS_HOST,
       },
