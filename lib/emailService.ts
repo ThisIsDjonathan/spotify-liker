@@ -29,7 +29,6 @@ export class EmailService {
   async sendEmail(
     to: string,
     subject: string,
-    text: string,
     html?: string,
   ): Promise<void> {
     try {
@@ -37,7 +36,6 @@ export class EmailService {
         from: process.env.SMTP_FROM,
         to,
         subject,
-        text,
         html,
       };
 
