@@ -41,7 +41,7 @@ export default function LoginPage() {
             transition={{ delay: 0.4, duration: 0.7 }}
             className="text-3xl font-light mb-3 text-center tracking-wide"
           >
-            Playlist Fusion
+            Spotify Liker
           </motion.h1>
 
           <motion.p
