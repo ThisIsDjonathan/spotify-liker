@@ -7,14 +7,17 @@ export class QueueService {
   private queue: Queue;
   private redisClient: Redis;
   public QUEUE_NAME = "like-songs-queue";
-  public USER_LOCKED_FOR_SECONDS = parseInt(process.env.USER_LOCK_TTL || "60", 10);
+  public USER_LOCKED_FOR_SECONDS = parseInt(
+    process.env.USER_LOCK_TTL || "60",
+    10
+  );
 
   constructor() {
     if (!process.env.REDIS_HOST) {
       throw new Error("REDIS_HOST environment variable is not set.");
     }
 
-    if (process.env.NODE_ENV == "production") {
+    if (process.env.NODE_ENV === "production") {
       this.redisClient = new Redis(process.env.REDIS_HOST!, {
         tls: {}, // Enable TLS on production
       });
@@ -23,9 +26,7 @@ export class QueueService {
     }
 
     this.queue = new Queue(this.QUEUE_NAME, {
-      connection: {
-        host: process.env.REDIS_HOST,
-      },
+      connection: this.redisClient,
     });
   }
 
