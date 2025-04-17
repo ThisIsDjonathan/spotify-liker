@@ -24,9 +24,37 @@ export function buildUserMessage(
 export function buildEmailMessage(
   userName: string,
   playlistCount: number,
-  songsCount: number,
+  songsCount: number
 ): string {
-  return `Hey ${userName},\n\nWe just wanted to let you know that we've successfully liked all the songs in your ${playlistCount} playlists, totaling ${songsCount} songs. 🎉\n\nThanks for using our service!\n\nBest,\nThe Team`;
+  return `
+    <div style="font-family: sans-serif; padding: 24px; color: #ffffff; background-color: #0d0d0d;">
+      <img
+        src="#TODO-ADD-CORRECT-URL/spotify-liker-og.png"
+        alt="Spotify Liker by DJ"
+        style="width: 100%; max-width: 600px; border-radius: 12px; margin-bottom: 24px;"
+      />
+      <h2 style="color: #1ED760;">Hey ${userName},</h2>
+
+      <p style="font-size: 16px; line-height: 1.5;">
+        We just finished processing your music collection! ✅ <br />
+        A total of <strong>${songsCount}</strong> songs across <strong>${playlistCount}</strong> playlists have been added to your <em>Liked Songs</em> on Spotify. 🎉
+      </p>
+
+      <p style="font-size: 16px; line-height: 1.5;">
+        That's your personalized super-playlist, ready to shuffle and enjoy.
+        Click here to check it out: <br />
+        🎵 <a href="https://open.spotify.com/collection/tracks" style="color: #1ED760;">Liked Songs</a>
+      </p>
+
+      <p style="font-size: 16px; line-height: 1.5;">
+        Thanks for using <strong>Spotify Liker by DJ</strong>! Feel free to check out more on our website:
+        <br />
+        👉 <a href="https://www.djonathan.com" style="color: #1ED760;">djonathan.com</a>
+      </p>
+
+      <p style="margin-top: 32px;">Rock on, <br />— DJ</p>
+    </div>
+  `;
 }
 
 export function buildEmailSubject(): string {
