@@ -2,12 +2,17 @@ version: "3.9"
 
 services:
   redis:
-    build:
-      context: ..
-      dockerfile: infra-local/Dockerfile.redis
+    image: redis:7
     container_name: spotify-liker-redis
     ports:
       - "6379:6379"
     environment:
-      # Optional: Allow Redis to run without a password for local testing
-      ALLOW_EMPTY_PASSWORD: "yes"
+      ALLOW_EMPTY_PASSWORD: "yes" # Allow Redis to run without a password for local testing
+  mongodb:
+    image: mongo:6
+    container_name: spotify-liker-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
