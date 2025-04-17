@@ -20,9 +20,12 @@ export class QueueService {
     if (process.env.NODE_ENV === "production") {
       this.redisClient = new Redis(process.env.REDIS_HOST!, {
         tls: {}, // Enable TLS on production
+        maxRetriesPerRequest: null,
       });
     } else {
-      this.redisClient = new Redis(process.env.REDIS_HOST!);
+      this.redisClient = new Redis(process.env.REDIS_HOST!, {
+        maxRetriesPerRequest: null,
+      });
     }
 
     this.queue = new Queue(this.QUEUE_NAME, {
