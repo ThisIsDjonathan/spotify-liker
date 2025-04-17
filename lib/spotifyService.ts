@@ -2,7 +2,9 @@ import SpotifyWebApi from "spotify-web-api-node";
 import { LikeAllResult } from "@/types/LikeAllResult";
 
 if (!process.env.MAX_PLAYLISTS || !process.env.MAX_TRACKS_PER_PLAYLIST) {
-  throw new Error("Environment variables MAX_PLAYLISTS and MAX_TRACKS_PER_PLAYLIST are required.");
+  throw new Error(
+    "Environment variables MAX_PLAYLISTS and MAX_TRACKS_PER_PLAYLIST are required."
+  );
 }
 
 const MAX_PLAYLISTS = parseInt(process.env.MAX_PLAYLISTS!);
@@ -42,41 +44,13 @@ class SpotifyService {
         console.log(`Reached playlist limit of ${MAX_PLAYLISTS}.`);
         break;
       }
-
+      try {
+        await this.processPlaylist(playlist);
+      } catch (error) {
+        console.error(`Error processing playlist ${playlist.name}`, error);
+        continue;
+      }
       playlistCount++;
-      console.log(`Processing playlist: ${playlist.name}`);
-
-      const tracks = await this.spotifyApi.getPlaylistTracks(playlist.id);
-      let trackCount = 0;
-      const trackIds: string[] = [];
-
-      for (const track of tracks.body.items) {
-        if (trackCount >= MAX_TRACKS_PER_PLAYLIST) {
-          console.log(
-            `Reached track limit of ${MAX_TRACKS_PER_PLAYLIST} for playlist: ${playlist.name}.`
-          );
-          break;
-        }
-
-        if (track.track && track.track.type === "track") {
-          trackIds.push(track.track.id);
-          trackCount++;
-          songsCount++;
-
-          if (trackIds.length === SPOTIFY_BATCH_SIZE) {
-            await this.saveTracksInBatch(trackIds);
-            trackIds.length = 0;
-          }
-        }
-      }
-
-      if (trackIds.length > 0) {
-        await this.saveTracksInBatch(trackIds);
-      }
-
-      console.log(
-        `Processed ${trackCount} tracks from playlist: ${playlist.name}.`
-      );
     }
 
     console.log(
@@ -87,6 +61,47 @@ class SpotifyService {
       playlistCount,
       songsCount,
     };
+  }
+
+  private async processPlaylist(playlist: SpotifyApi.PlaylistObjectSimplified): Promise<number> {
+    console.log(`Processing playlist: ${playlist.name}`);
+
+    const tracks = await this.spotifyApi.getPlaylistTracks(playlist.id);
+    let trackCount = 0;
+    const trackIds: string[] = [];
+
+    for (const track of tracks.body.items) {
+      if (trackCount >= MAX_TRACKS_PER_PLAYLIST) {
+        console.log(
+          `Reached track limit of ${MAX_TRACKS_PER_PLAYLIST} for playlist: ${playlist.name}.`
+        );
+        break;
+      }
+
+      if (track.track && track.track.type === "track") {
+        trackIds.push(track.track.id);
+        trackCount++;
+
+        if (trackIds.length === SPOTIFY_BATCH_SIZE) {
+          try {
+            await this.saveTracksInBatch(trackIds);
+          } catch (error) {
+            console.error(`Error saving ${trackIds.length} tracks for playlist ${playlist.name}`, error);
+          }
+          trackIds.length = 0;
+        }
+      }
+    }
+
+    if (trackIds.length > 0) {
+      await this.saveTracksInBatch(trackIds);
+    }
+
+    console.log(
+      `Processed ${trackCount} tracks from playlist: ${playlist.name}.`
+    );
+
+    return trackCount;
   }
 
   private async saveTracksInBatch(trackIds: string[], retries = 3) {
