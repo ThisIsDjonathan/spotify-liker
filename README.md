@@ -2,7 +2,7 @@
 
 Like all your saved songs on Spotify automatically — effortlessly and in the background.
 
-[🚀 Try the web app on Vercel](https://spotify-liker.vercel.app)
+[🚀 Try the web app on Vercel](https://dj-liker.vercel.app)
 
 ---
 

@@ -9,8 +9,8 @@ async function sendTestEmail() {
 
     await emailService.sendEmail(
       "odjonathankrause@gmail.com", // Recipient's email
-      "Test Email from Spotify Liker", // Subject
-      "<p>This is a <strong>test email</strong> sent from the Spotify Liker app.</p>", // HTML body
+      "Test Email from DJ Liker", // Subject
+      "<p>This is a <strong>test email</strong> sent from the DJ Liker app.</p>", // HTML body
     );
     console.log("Test email sent successfully.");
   } catch (error) {
