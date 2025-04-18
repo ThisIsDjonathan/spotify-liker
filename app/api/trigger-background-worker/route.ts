@@ -7,6 +7,8 @@ import { UserMessageType } from "@/types/UserMessageType";
 
 export async function POST() {
   try {
+    console.log(`POST request received at /api/trigger-background-worker`);
+    console.log("Fetching Spotify API credentials...");
     const spotifyApi = await getSpotifyApi();
 
     if (!spotifyApi || !spotifyApi?.accessToken) {
@@ -26,11 +28,24 @@ export async function POST() {
       );
     }
 
-    const spotifyService = new SpotifyService(spotifyApi?.accessToken);
+    let spotifyService;
+    try {
+      console.log("Initializing SpotifyService...");
+      spotifyService = new SpotifyService(spotifyApi?.accessToken);
+      console.log("SpotifyService initialized successfully.");
+    } catch (error) {
+      console.error("Failed to initialize SpotifyService:", error);
+      return NextResponse.json(
+        { error: "Failed to initialize SpotifyService" },
+        { status: 500 }
+      );
+    }
 
     let playlistsData;
     try {
+      console.log("Fetching user playlists...");
       playlistsData = await spotifyService.getUserPlaylists();
+      console.log("User playlists fetched successfully.");
     } catch (error) {
       console.error("Failed to fetch user playlists:", error);
       return NextResponse.json(
@@ -39,9 +54,23 @@ export async function POST() {
       );
     }
 
+    if (!playlistsData || !playlistsData.body || !playlistsData.body.items || playlistsData.body.items.length === 0) {
+      const userMsg = buildUserMessage(
+        UserMessageType.NO_PLAYLISTS,
+        {}
+      );
+      console.error("Invalid response from Spotify API:", playlistsData);
+      return NextResponse.json(
+        { userMsg },
+        { status: 200 }
+      );
+    }
+
     let username;
     try {
+      console.log("Fetching user name...");
       username = await spotifyService.getUserName();
+      console.log("User name fetched successfully.");
     } catch (error) {
       console.error("Failed to fetch user name:", error);
       return NextResponse.json(
@@ -52,7 +81,9 @@ export async function POST() {
 
     let queueService;
     try {
+      console.log("Initializing QueueService...");
       queueService = new QueueService();
+      console.log("QueueService initialized successfully.");
     } catch (error) {
       console.error("Failed to initialize queue service:", error);
       return NextResponse.json(
@@ -63,7 +94,9 @@ export async function POST() {
 
     let isUserLocked;
     try {
+      console.log("Checking if user is locked...");
       isUserLocked = await queueService.isUserLocked(spotifyApi.email);
+      console.log(`User lock status checked successfully. Locked: ${isUserLocked}`);
     } catch (error) {
       console.error("Failed to check if user is locked:", error);
       return NextResponse.json(
@@ -82,11 +115,13 @@ export async function POST() {
     }
 
     try {
+      console.log("Enqueuing job...");
       await queueService.enqueueJob(
         spotifyApi.email,
         username,
         spotifyApi.accessToken
       );
+      console.log("Job enqueued successfully.");
     } catch (error) {
       console.error("Failed to enqueue job:", error);
       return NextResponse.json(
