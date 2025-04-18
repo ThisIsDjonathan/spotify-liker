@@ -3,7 +3,7 @@ import { LikeAllResult } from "@/types/LikeAllResult";
 
 if (!process.env.MAX_PLAYLISTS || !process.env.MAX_TRACKS_PER_PLAYLIST) {
   throw new Error(
-    "Environment variables MAX_PLAYLISTS and MAX_TRACKS_PER_PLAYLIST are required.",
+    "Environment variables MAX_PLAYLISTS and MAX_TRACKS_PER_PLAYLIST are required."
   );
 }
 
@@ -33,7 +33,7 @@ class SpotifyService {
     const playlists = await this.spotifyApi.getUserPlaylists();
 
     console.log(
-      `Found ${playlists.body.items.length} playlists for user ${email}.`,
+      `Found ${playlists.body.items.length} playlists for user ${email}.`
     );
 
     let playlistCount = 0;
@@ -54,7 +54,7 @@ class SpotifyService {
     }
 
     console.log(
-      `Finished processing ${playlistCount} playlists and ${songsCount} tracks for user ${email}.`,
+      `Finished processing ${playlistCount} playlists and ${songsCount} tracks for user ${email}.`
     );
 
     return {
@@ -64,7 +64,7 @@ class SpotifyService {
   }
 
   private async processPlaylist(
-    playlist: SpotifyApi.PlaylistObjectSimplified,
+    playlist: SpotifyApi.PlaylistObjectSimplified
   ): Promise<number> {
     console.log(`Processing playlist: ${playlist.name}`);
 
@@ -75,35 +75,44 @@ class SpotifyService {
     for (const track of tracks.body.items) {
       if (trackCount >= MAX_TRACKS_PER_PLAYLIST) {
         console.log(
-          `Reached track limit of ${MAX_TRACKS_PER_PLAYLIST} for playlist: ${playlist.name}.`,
+          `Reached track limit of ${MAX_TRACKS_PER_PLAYLIST} for playlist: ${playlist.name}.`
         );
         break;
       }
 
-      if (track.track && track.track.type === "track") {
-        trackIds.push(track.track.id);
-        trackCount++;
+      if (!track.track || track.track.type !== "track" || !track.track.id) {
+        continue;
+      }
 
-        if (trackIds.length === SPOTIFY_BATCH_SIZE) {
-          try {
-            await this.saveTracksInBatch(trackIds);
-          } catch (error) {
-            console.error(
-              `Error saving ${trackIds.length} tracks for playlist ${playlist.name}`,
-              error,
-            );
-          }
-          trackIds.length = 0;
+      trackIds.push(track.track.id);
+      trackCount++;
+
+      if (trackIds.length === SPOTIFY_BATCH_SIZE) {
+        try {
+          await this.saveTracksInBatch(trackIds);
+        } catch (error) {
+          console.error(
+            `Error saving ${trackIds.length} tracks for playlist ${playlist.name}`,
+            error
+          );
         }
+        trackIds.length = 0;
       }
     }
 
     if (trackIds.length > 0) {
-      await this.saveTracksInBatch(trackIds);
+      try {
+        await this.saveTracksInBatch(trackIds);
+      } catch (error) {
+        console.error(
+          `Error saving remaining ${trackIds.length} tracks for playlist ${playlist.name}`,
+          error
+        );
+      }
     }
 
     console.log(
-      `Processed ${trackCount} tracks from playlist: ${playlist.name}.`,
+      `Processed ${trackCount} tracks from playlist: ${playlist.name}.`
     );
 
     return trackCount;
@@ -119,11 +128,11 @@ class SpotifyService {
         const retryAfter = error.headers["retry-after"];
         console.warn(`Rate limit hit. Retrying after ${retryAfter} seconds...`);
         await new Promise((resolve) =>
-          setTimeout(resolve, parseInt(retryAfter, 10) * 1000),
+          setTimeout(resolve, parseInt(retryAfter, 10) * 1000)
         );
         await this.saveTracksInBatch(trackIds, retries - 1);
       } else {
-        console.error("Failed to save tracks:", error);
+        console.error(`Failed to save tracks: ${trackIds.join(", ")}`, error);
         throw error;
       }
     }
