@@ -4,7 +4,9 @@ const BASIC_AUTH_USERNAME = process.env.BASIC_AUTH_USERNAME;
 const BASIC_AUTH_PASSWORD = process.env.BASIC_AUTH_PASSWORD;
 
 if (!BASIC_AUTH_USERNAME || !BASIC_AUTH_PASSWORD) {
-  throw new Error("Basic auth credentials are not set in environment variables.");
+  throw new Error(
+    "Basic auth credentials are not set in environment variables.",
+  );
 }
 
 export function basicAuth(request: Request): Response | null {
@@ -16,13 +18,13 @@ export function basicAuth(request: Request): Response | null {
       {
         status: 401,
         headers: { "WWW-Authenticate": 'Basic realm="Secure Area"' },
-      }
+      },
     );
   }
 
   const base64Credentials = authHeader.split(" ")[1];
   const credentials = Buffer.from(base64Credentials, "base64").toString(
-    "utf-8"
+    "utf-8",
   );
   const [username, password] = credentials.split(":");
 
@@ -32,7 +34,7 @@ export function basicAuth(request: Request): Response | null {
       {
         status: 401,
         headers: { "WWW-Authenticate": 'Basic realm="Secure Area"' },
-      }
+      },
     );
   }
 
