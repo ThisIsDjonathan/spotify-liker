@@ -12,7 +12,7 @@ export default function ConfirmationPage({ email }: { email: string }) {
   const [progress, setProgress] = useState<number>(0);
   const [playlistCount, setPlaylistCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [title, setTitle] = useState<string>("Processing Started");
+  const [title, setTitle] = useState<string>("Background Processing Started");
 
   useEffect(() => {
     if (playlistCount === 0) return;
@@ -29,8 +29,8 @@ export default function ConfirmationPage({ email }: { email: string }) {
           return playlistCount;
         }
 
-        // Increase the delay by 1 second for the next iteration
-        currentDelay += 1000;
+        // Increase the delay by n for the next iteration
+        currentDelay += 200;
 
         // Schedule the next increment with the increased delay
         timer = setTimeout(incrementProgress, currentDelay);
@@ -126,7 +126,7 @@ export default function ConfirmationPage({ email }: { email: string }) {
               <p>
                 You&apos;ll receive an email at{" "}
                 <span className="text-[#1ED760]">{email}</span> when it&apos;s
-                done.
+                done. You can safely close this tab 😉
               </p>
 
               {playlistCount > 0 && (

@@ -9,7 +9,7 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <Music className="h-4 w-4 text-[#1ED760]" />
             <span className="text-sm font-light">
-              Mixing code & beats since 2023
+              Mixing code & beats since 2014
             </span>
           </div>
           <div className="text-xs">

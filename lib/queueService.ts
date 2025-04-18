@@ -40,6 +40,25 @@ export class QueueService {
     return keys;
   }
 
+  async getQueueLength(): Promise<{
+    waiting: number;
+    active: number;
+    delayed: number;
+    totalCount: number;
+  }> {
+    const jobCounts = await this.queue.getJobCounts();
+    const waiting = jobCounts.waiting || 0;
+    const active = jobCounts.active || 0;
+    const delayed = jobCounts.delayed || 0;
+    const totalCount = waiting + active + delayed;
+    return {
+      waiting,
+      active,
+      delayed,
+      totalCount,
+    };
+  }
+
   async enqueueJob(
     email: string,
     username: string,

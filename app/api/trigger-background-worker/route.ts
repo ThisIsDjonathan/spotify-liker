@@ -54,16 +54,15 @@ export async function POST() {
       );
     }
 
-    if (!playlistsData || !playlistsData.body || !playlistsData.body.items || playlistsData.body.items.length === 0) {
-      const userMsg = buildUserMessage(
-        UserMessageType.NO_PLAYLISTS,
-        {}
-      );
+    if (
+      !playlistsData ||
+      !playlistsData.body ||
+      !playlistsData.body.items ||
+      playlistsData.body.items.length === 0
+    ) {
+      const userMsg = buildUserMessage(UserMessageType.NO_PLAYLISTS, {});
       console.error("Invalid response from Spotify API:", playlistsData);
-      return NextResponse.json(
-        { userMsg },
-        { status: 200 }
-      );
+      return NextResponse.json({ userMsg }, { status: 200 });
     }
 
     let username;
@@ -96,7 +95,9 @@ export async function POST() {
     try {
       console.log("Checking if user is locked...");
       isUserLocked = await queueService.isUserLocked(spotifyApi.email);
-      console.log(`User lock status checked successfully. Locked: ${isUserLocked}`);
+      console.log(
+        `User lock status checked successfully. Locked: ${isUserLocked}`
+      );
     } catch (error) {
       console.error("Failed to check if user is locked:", error);
       return NextResponse.json(
