@@ -29,7 +29,7 @@ export function buildEmailMessage(
   return `
     <div style="font-family: sans-serif; padding: 24px; color: #ffffff; background-color: #0d0d0d;">
       <img
-        src="#TODO-ADD-CORRECT-URL/spotify-liker-og.png"
+        src="https://spotify-liker.vercel.app/og-image.png"
         alt="Spotify Liker by DJ"
         style="width: 100%; max-width: 600px; border-radius: 12px; margin-bottom: 24px;"
       />
