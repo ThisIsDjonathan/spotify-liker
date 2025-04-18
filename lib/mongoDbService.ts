@@ -12,7 +12,7 @@ export class MongoDbService {
       !process.env.MONGO_COLLECTION_NAME
     ) {
       throw new Error(
-        "MongoDB configuration is missing. Please set MONGO_URI, MONGO_DB_NAME, and MONGO_COLLECTION_NAME in your environment variables."
+        "MongoDB configuration is missing. Please set MONGO_URI, MONGO_DB_NAME, and MONGO_COLLECTION_NAME in your environment variables.",
       );
     }
 
@@ -35,7 +35,7 @@ export class MongoDbService {
     email: string,
     username: string,
     playlistCount: number,
-    songsCount: number
+    songsCount: number,
   ): Promise<void> {
     try {
       const result = await this.collection.insertOne({

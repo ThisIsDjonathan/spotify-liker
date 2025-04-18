@@ -10,7 +10,7 @@ export async function GET() {
     console.error("Unexpected error in POST handler:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

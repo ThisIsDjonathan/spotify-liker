@@ -8,7 +8,7 @@ async function main() {
       "user@example.com",
       "exampleUser",
       10, // Playlist count
-      100 // Songs count
+      100, // Songs count
     );
 
     console.log("Results saved successfully.");

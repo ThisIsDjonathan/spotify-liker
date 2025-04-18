@@ -9,6 +9,7 @@ Like all your saved songs on Spotify automatically — effortlessly and in the b
 ## ✨ What is this?
 
 Spotify Liker is a two-part system:
+
 - A **Next.js app** (deployed on Vercel) where users authenticate with Spotify
 - A **background worker** (hosted on a VPS with Coolify) that goes through your playlists and likes all songs asynchronously
 
@@ -19,6 +20,7 @@ No need to like each track manually anymore — just click and let it roll! 🪄
 ## 🧱 Tech Stack
 
 This project uses:
+
 - [Next.js](https://nextjs.org/) for the web interface
 - [Bun](https://bun.sh/) as the runtime and package manager
 - [Coolify](https://coolify.io/) to run the worker
@@ -33,6 +35,7 @@ This project uses:
 1. Clone the repo and create your local environment file:
    ```bash
    cp .env.example .env.example
+   ```
 2. Install all dependencies:
    ```bash
    bun install

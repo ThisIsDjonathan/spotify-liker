@@ -24,7 +24,7 @@ export function buildUserMessage(
 export function buildEmailMessage(
   userName: string,
   playlistCount: number,
-  songsCount: number
+  songsCount: number,
 ): string {
   return `
     <div style="font-family: sans-serif; padding: 24px; color: #ffffff; background-color: #0d0d0d;">

@@ -26,11 +26,7 @@ export class EmailService {
     });
   }
 
-  async sendEmail(
-    to: string,
-    subject: string,
-    html?: string,
-  ): Promise<void> {
+  async sendEmail(to: string, subject: string, html?: string): Promise<void> {
     try {
       const mailOptions = {
         from: process.env.SMTP_FROM,

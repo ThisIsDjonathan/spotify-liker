@@ -16,10 +16,9 @@ const missingVars = requiredEnvVars.filter((key) => !process.env[key]);
 
 if (missingVars.length > 0) {
   throw new Error(
-    `Missing required environment variables: ${missingVars.join(", ")}`
+    `Missing required environment variables: ${missingVars.join(", ")}`,
   );
 }
-
 
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID!;
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET!;

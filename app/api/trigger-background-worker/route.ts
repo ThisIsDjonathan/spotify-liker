@@ -13,18 +13,18 @@ export async function POST() {
 
     if (!spotifyApi || !spotifyApi?.accessToken) {
       console.error(
-        "Unauthorized: Missing or invalid Spotify API credentials."
+        "Unauthorized: Missing or invalid Spotify API credentials.",
       );
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     if (!spotifyApi?.email || !spotifyApi?.accessToken) {
       console.error(
-        "Invalid Spotify API credentials: Missing email or access token."
+        "Invalid Spotify API credentials: Missing email or access token.",
       );
       return NextResponse.json(
         { error: "Invalid Spotify API credentials" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -37,7 +37,7 @@ export async function POST() {
       console.error("Failed to initialize SpotifyService:", error);
       return NextResponse.json(
         { error: "Failed to initialize SpotifyService" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -50,7 +50,7 @@ export async function POST() {
       console.error("Failed to fetch user playlists:", error);
       return NextResponse.json(
         { error: "Failed to fetch user playlists" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -74,7 +74,7 @@ export async function POST() {
       console.error("Failed to fetch user name:", error);
       return NextResponse.json(
         { error: "Failed to fetch user name" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -87,7 +87,7 @@ export async function POST() {
       console.error("Failed to initialize queue service:", error);
       return NextResponse.json(
         { error: "Failed to initialize queue service" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -96,13 +96,13 @@ export async function POST() {
       console.log("Checking if user is locked...");
       isUserLocked = await queueService.isUserLocked(spotifyApi.email);
       console.log(
-        `User lock status checked successfully. Locked: ${isUserLocked}`
+        `User lock status checked successfully. Locked: ${isUserLocked}`,
       );
     } catch (error) {
       console.error("Failed to check if user is locked:", error);
       return NextResponse.json(
         { error: "Failed to check user lock status" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -120,14 +120,14 @@ export async function POST() {
       await queueService.enqueueJob(
         spotifyApi.email,
         username,
-        spotifyApi.accessToken
+        spotifyApi.accessToken,
       );
       console.log("Job enqueued successfully.");
     } catch (error) {
       console.error("Failed to enqueue job:", error);
       return NextResponse.json(
         { error: "Failed to enqueue job" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -142,7 +142,7 @@ export async function POST() {
     console.error("Unexpected error in POST handler:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

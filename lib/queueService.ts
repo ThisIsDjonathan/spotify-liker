@@ -9,7 +9,7 @@ export class QueueService {
   public QUEUE_NAME = "like-songs-queue";
   public USER_LOCKED_FOR_SECONDS = parseInt(
     process.env.USER_LOCK_TTL || "60",
-    10
+    10,
   );
 
   constructor() {
@@ -26,6 +26,7 @@ export class QueueService {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getConnection(): any {
     return this.queue.opts.connection;
   }
@@ -62,7 +63,7 @@ export class QueueService {
   async enqueueJob(
     email: string,
     username: string,
-    accessToken: string
+    accessToken: string,
   ): Promise<Job<SpotifyLikerJob> | null> {
     if (!email || !accessToken) {
       throw new Error("Email and access token are required to enqueue a job.");
@@ -95,7 +96,7 @@ export class QueueService {
       redisKey,
       "locked",
       "EX",
-      this.USER_LOCKED_FOR_SECONDS
+      this.USER_LOCKED_FOR_SECONDS,
     );
     return record;
   }
