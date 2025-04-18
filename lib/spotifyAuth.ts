@@ -223,14 +223,28 @@ export async function getUserProfile(accessToken: string) {
   });
 
   if (!response.ok) {
-    console.log("Failed to fetch user profile:", response.statusText);
+    console.log(
+      `Failed to fetch user profile: ${response.status} - ${response.statusText}`
+    );
     try {
       const errorResponse = await response.json();
       console.error("Error response:", errorResponse);
     } catch (error) {
+      try {
+        const textResponse = await response.text();
+        console.error("Error response text:", textResponse);
+      } catch (error) {
+        console.error("Failed to parse error response text:", error);
+      }
       console.error("Failed to parse error response:", error);
     }
-    throw new Error("Failed to fetch user profile");
+
+    if (typeof window !== "undefined") {
+      window.location.href = "/error";
+    }
+
+    return null;
+
   }
 
   return response.json();
