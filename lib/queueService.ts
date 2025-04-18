@@ -17,24 +17,22 @@ export class QueueService {
       throw new Error("REDIS_HOST environment variable is not set.");
     }
 
-    if (process.env.NODE_ENV === "production") {
-      this.redisClient = new Redis(process.env.REDIS_HOST!, {
-        tls: {}, // Enable TLS on production
-        maxRetriesPerRequest: null,
-      });
-    } else {
-      this.redisClient = new Redis(process.env.REDIS_HOST!, {
-        maxRetriesPerRequest: null,
-      });
-    }
+    this.redisClient = new Redis(process.env.REDIS_HOST!, {
+      maxRetriesPerRequest: null,
+    });
 
     this.queue = new Queue(this.QUEUE_NAME, {
       connection: this.redisClient,
     });
   }
 
-  getConnection() {
+  getConnection(): any {
     return this.queue.opts.connection;
+  }
+
+  async closeConnection() {
+    await this.redisClient.quit();
+    await this.queue.close();
   }
 
   async listAllKeys() {
