@@ -70,7 +70,7 @@ export async function exchangeCodeForTokens(code: string) {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       Authorization: `Basic ${Buffer.from(
-        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`,
+        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
       ).toString("base64")}`,
     },
     body: params.toString(),
@@ -80,7 +80,21 @@ export async function exchangeCodeForTokens(code: string) {
     throw new Error("Failed to exchange code for tokens");
   }
 
-  return response.json();
+  const tokenData = await response.json();
+
+  // Compare scopes
+  const expectedScopes = SPOTIFY_SCOPES.split(" ").sort();
+  const grantedScopes = tokenData.scope?.split(" ").sort();
+
+  const scopesMatch =
+    JSON.stringify(expectedScopes) === JSON.stringify(grantedScopes);
+
+  if (!scopesMatch) {
+    console.warn("User did not grant all required scopes");
+    throw new Error("Missing required Spotify scopes");
+  }
+
+  return tokenData;
 }
 
 // Refresh the access token
@@ -223,28 +237,14 @@ export async function getUserProfile(accessToken: string) {
   });
 
   if (!response.ok) {
-    console.log(
-      `Failed to fetch user profile: ${response.status} - ${response.statusText}`
-    );
+    console.log(`Failed to fetch user profile: ${response.status} - ${response.statusText}`);
     try {
-      const errorResponse = await response.json();
+      const errorResponse = await response.text();
       console.error("Error response:", errorResponse);
     } catch (error) {
-      try {
-        const textResponse = await response.text();
-        console.error("Error response text:", textResponse);
-      } catch (error) {
-        console.error("Failed to parse error response text:", error);
-      }
       console.error("Failed to parse error response:", error);
+      throw new Error("Failed to fetch user profile");
     }
-
-    if (typeof window !== "undefined") {
-      window.location.href = "/error";
-    }
-
-    return null;
-
   }
 
   return response.json();

@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error during authentication:", error);
     return NextResponse.redirect(
-      new URL("/?error=authentication_failed", request.url),
+      new URL("/error", request.url),
     );
   }
 }
