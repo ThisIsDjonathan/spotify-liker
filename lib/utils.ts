@@ -28,11 +28,6 @@ export function buildEmailMessage(
 ): string {
   return `
     <div style="font-family: sans-serif; padding: 24px; color: #ffffff; background-color: #0d0d0d;">
-      <img
-        src="https://spotify-liker.vercel.app/og-image.png"
-        alt="Spotify Liker by DJ"
-        style="width: 100%; max-width: 600px; border-radius: 12px; margin-bottom: 24px;"
-      />
       <h2 style="color: #1ED760;">Hey ${userName},</h2>
 
       <p style="font-size: 16px; line-height: 1.5;">
@@ -53,6 +48,12 @@ export function buildEmailMessage(
       </p>
 
       <p style="margin-top: 32px;">Rock on, <br />— DJ</p>
+      <br />
+      <img
+        src="https://spotify-liker.vercel.app/og-image.png"
+        alt="Spotify Liker by DJ"
+        style="width: 100%; max-width: 600px; border-radius: 12px; margin-bottom: 24px;"
+      />
     </div>
   `;
 }
