@@ -223,6 +223,13 @@ export async function getUserProfile(accessToken: string) {
   });
 
   if (!response.ok) {
+    console.log("Failed to fetch user profile:", response.statusText);
+    try {
+      const errorResponse = await response.json();
+      console.error("Error response:", errorResponse);
+    } catch (error) {
+      console.error("Failed to parse error response:", error);
+    }
     throw new Error("Failed to fetch user profile");
   }
 
