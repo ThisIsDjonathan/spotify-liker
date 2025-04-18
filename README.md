@@ -1,5 +1,11 @@
 # 🎧 DJ Spotify Liker
 
+
+> ⚠️⚠️⚠️⚠️ **Warning:** This is not fully working in production **yet**.
+> Spotify needs to approve the app on their side for it to be considered production-ready.
+> However, you can still clone the repo and try by yourself 🤘🏼
+
+
 Like all your saved songs on Spotify automatically — effortlessly and in the background.
 
 [🚀 Try the web app on Vercel](https://dj-liker.vercel.app)
@@ -58,6 +64,7 @@ Instead, by enqueuing the job **on the server side** of the Next.js app and **pr
 ## ⚙️ How to Run Locally
 
 > Make sure you have **Docker**, **Docker Compose**, and **Bun** installed.
+> You will need Spotify Credentials that can be created [here](https://developer.spotify.com)
 
 1. Clone the repo and create your local environment file:
    ```bash
