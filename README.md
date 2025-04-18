@@ -25,6 +25,8 @@ This project uses:
 - [Bun](https://bun.sh/) as the runtime and package manager
 - [Coolify](https://coolify.io/) to run the worker
 - [Spotify Web API](https://developer.spotify.com/documentation/web-api/) to manage user playlists
+- [Redis](https://redis.io) to comunicate between the frontend and the worker
+- [MongoDB](https://www.mongodb.com) to store the user result (for debugging)
 
 ---
 
@@ -34,7 +36,7 @@ This project uses:
 
 1. Clone the repo and create your local environment file:
    ```bash
-   cp .env.example .env.example
+   cp .env.example .env
    ```
 2. Install all dependencies:
    ```bash
