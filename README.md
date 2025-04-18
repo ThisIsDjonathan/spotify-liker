@@ -1,4 +1,4 @@
-# 🎧 Spotify Liker
+# 🎧 DJ Spotify Liker
 
 Like all your saved songs on Spotify automatically — effortlessly and in the background.
 
@@ -8,7 +8,7 @@ Like all your saved songs on Spotify automatically — effortlessly and in the b
 
 ## ✨ What is this?
 
-Spotify Liker is a two-part system:
+DJ Spotify Liker is a two-part system:
 
 - A **Next.js app** (deployed on Vercel) where users authenticate with Spotify
 - A **background worker** (hosted on a VPS with Coolify) that goes through your playlists and likes all songs asynchronously
@@ -27,6 +27,31 @@ This project uses:
 - [Spotify Web API](https://developer.spotify.com/documentation/web-api/) to manage user playlists
 - [Redis](https://redis.io) to comunicate between the frontend and the worker
 - [MongoDB](https://www.mongodb.com) to store the user result (for debugging)
+
+---
+
+## 🔧 How It Works
+
+The frontend (a **Next.js** app) logs the user into their **Spotify account**, then enqueues a **job** on a **Redis server**.
+
+This job is later picked up and processed by a **Worker** running on my **VPS**.
+
+The **Worker** uses the **Spotify API** to loop through the user's playlists and "like" each song.
+
+---
+
+### 🌀 Why Asynchronous?
+
+Because **Vercel's serverless environment** doesn't support **long-running tasks**.
+Offloading the processing to a Worker avoids timeouts and limitations.
+
+---
+
+### 🔐 Why Use Redis?
+
+We could trigger the Worker directly via an API call, **but that would expose the user's access token** in the browser (visible through DevTools > Network tab).
+
+Instead, by enqueuing the job **on the server side** of the Next.js app and **processing it privately** via the Worker on a separate server, we ensure the token stays secure and never leaves the backend.
 
 ---
 
