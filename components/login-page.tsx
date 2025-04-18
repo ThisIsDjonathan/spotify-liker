@@ -110,9 +110,9 @@ export default function LoginPage() {
           >
             <p>
               <span className="font-medium text-white">
-                Don&quot;t know what to play?
+                Don&#39;t know what to play?
               </span>{" "}
-              We&quot;ll save you the trouble.
+              We&#39;ll save you the trouble.
             </p>
             <p>
               We go through all your playlists and &quot;like&quot; every track
