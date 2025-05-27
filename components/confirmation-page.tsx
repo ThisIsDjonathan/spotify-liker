@@ -99,7 +99,7 @@ export default function ConfirmationPage({ email }: { email: string }) {
         console.error("Error starting background process:", err);
         const msg = err instanceof Error ? err.message : "An error occurred 😱";
         setUserMessage(msg);
-        setTitle("Error Starting Process 😢");
+        setTitle("Error Starting Process 😲");
         setIsLoading(false);
       }
     };

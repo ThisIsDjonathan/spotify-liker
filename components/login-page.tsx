@@ -19,12 +19,12 @@ export default function LoginPage() {
   };
 
   return (
-<div className="w-full max-w-md mx-auto px-6 py-12 flex-1 flex flex-col justify-center">
+    <div className="w-full max-w-xl mx-auto px-6 py-12 flex-1 flex flex-col justify-center">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
-        className="w-full max-w-md card-elegant rounded-xl p-8"
+        className="w-full max-w-xl card-elegant rounded-xl p-8"
       >
         <div className="flex flex-col items-center">
           <motion.div

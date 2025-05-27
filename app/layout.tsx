@@ -4,6 +4,7 @@ import { Montserrat } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AnimatedBackground } from "@/components/animated-background";
 import Footer from "@/components/footer";
+import { AlertBanner } from "@/components/alert-banner";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -41,6 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.variable}`}>
       <body className="font-sans bg-black text-white min-h-screen flex flex-col">
+        <AlertBanner />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
