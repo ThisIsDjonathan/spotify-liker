@@ -13,16 +13,16 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: "DJ Liker",
+  title: "DJ Spotify Liker",
   description: "Like all songs in your Spotify playlists with one click",
   icons: {
     icon: "/favicon.png",
   },
   openGraph: {
-    title: "DJ Liker",
+    title: "DJ Spotify Liker",
     description: "Like all songs in your Spotify playlists with one click",
     url: "https://dj-liker.vercel.app",
-    siteName: "DJ Liker",
+    siteName: "DJ Spotify Liker",
     images: [
       {
         url: "/og-image.png",
