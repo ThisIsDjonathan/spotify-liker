@@ -1,10 +1,8 @@
 # 🎧 DJ Spotify Liker
 
-
 > ⚠️⚠️⚠️⚠️ **Warning:** This is not fully working in production **yet**.
 > Spotify needs to approve the app on their side for it to be considered production-ready.
 > However, you can still clone the repo and try by yourself 🤘🏼
-
 
 Like all your saved songs on Spotify automatically — effortlessly and in the background.
 

@@ -46,25 +46,23 @@ export async function POST() {
 }
 
 async function getSpotifyApiInstance(): Promise<SpotifyApiType> {
-    const spotifyApi = await getSpotifyApi();
+  const spotifyApi = await getSpotifyApi();
 
-    if (!spotifyApi) {
-      throw new AppError({
-        error: "Unauthorized: Missing or invalid Spotify API credentials.",
-        statusCode: 401,
-      });
-    }
+  if (!spotifyApi) {
+    throw new AppError({
+      error: "Unauthorized: Missing or invalid Spotify API credentials.",
+      statusCode: 401,
+    });
+  }
 
-    if (!spotifyApi.email || !spotifyApi.accessToken) {
-      throw new AppError(
-        {
-          error: "Invalid Spotify API credentials",
-          statusCode: 400
-         },
-      );
-    }
+  if (!spotifyApi.email || !spotifyApi.accessToken) {
+    throw new AppError({
+      error: "Invalid Spotify API credentials",
+      statusCode: 400,
+    });
+  }
 
-    return spotifyApi;
+  return spotifyApi;
 }
 
 async function enqueueJob(spotifyApi: SpotifyApiType, username: string) {
@@ -78,5 +76,9 @@ async function enqueueJob(spotifyApi: SpotifyApiType, username: string) {
     });
   }
 
-  await queueService.enqueueJob(spotifyApi.email!, username, spotifyApi.accessToken);
+  await queueService.enqueueJob(
+    spotifyApi.email!,
+    username,
+    spotifyApi.accessToken,
+  );
 }

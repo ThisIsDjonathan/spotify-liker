@@ -13,8 +13,8 @@ export default function LoginPage() {
       window.location.href = "/api/auth/login";
     } catch (error) {
       console.error("Error logging in:", error);
-       setLoading(false);
-       window.location.href = "/error";
+      setLoading(false);
+      window.location.href = "/error";
     }
   };
 

@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     console.error("Error during Spotify authorization:", error);
     return NextResponse.json(
       { error: "Failed to initiate login process" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

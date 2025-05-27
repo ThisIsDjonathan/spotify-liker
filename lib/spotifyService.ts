@@ -22,7 +22,12 @@ class SpotifyService {
   async getUserPlaylists() {
     const playlists = await this.spotifyApi.getUserPlaylists();
 
-    if (!playlists || !playlists.body || !playlists.body.items || playlists.body.items.length === 0) {
+    if (
+      !playlists ||
+      !playlists.body ||
+      !playlists.body.items ||
+      playlists.body.items.length === 0
+    ) {
       return null;
     }
 

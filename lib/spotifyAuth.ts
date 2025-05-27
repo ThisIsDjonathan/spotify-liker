@@ -71,7 +71,7 @@ export async function exchangeCodeForTokens(code: string) {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       Authorization: `Basic ${Buffer.from(
-        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`,
       ).toString("base64")}`,
     },
     body: params.toString(),
@@ -238,7 +238,9 @@ export async function getUserProfile(accessToken: string) {
   });
 
   if (!response.ok) {
-    console.log(`Failed to fetch user profile: ${response.status} - ${response.statusText}`);
+    console.log(
+      `Failed to fetch user profile: ${response.status} - ${response.statusText}`,
+    );
     try {
       const errorResponse = await response.text();
       console.error("Error response:", errorResponse);

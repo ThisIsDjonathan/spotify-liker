@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface AppErrorInterface {
-    error?: any | Error;
-    statusCode?: number;
+  error?: any | Error;
+  statusCode?: number;
 }
 
 export class AppError extends Error {
