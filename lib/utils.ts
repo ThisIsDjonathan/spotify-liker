@@ -50,7 +50,7 @@ export function buildEmailMessage(
       <p style="margin-top: 32px;">Rock on, <br />— DJ</p>
       <br />
       <img
-        src="https://dj-liker.vercel.app/og-image.png"
+        src="https://spotify-liker.vercel.app//og-image.png"
         alt="Spotify Liker by DJ"
         style="width: 100%; max-width: 600px; border-radius: 12px; margin-bottom: 24px;"
       />

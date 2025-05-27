@@ -21,7 +21,7 @@ export const metadata = {
   openGraph: {
     title: "DJ Spotify Liker",
     description: "Like all songs in your Spotify playlists with one click",
-    url: "https://dj-liker.vercel.app",
+    url: "https://spotify-liker.vercel.app/",
     siteName: "DJ Spotify Liker",
     images: [
       {
