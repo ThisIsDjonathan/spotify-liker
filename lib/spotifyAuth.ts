@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { jwtVerify, SignJWT } from "jose";
+import { SpotifyApiType } from "@/types/SpotifyApiType";
 
 // Environment variables
 const requiredEnvVars = [
@@ -164,7 +165,7 @@ export async function getSession() {
 }
 
 // Get the Spotify API client with the current access token
-export async function getSpotifyApi() {
+export async function getSpotifyApi(): Promise<SpotifyApiType | null> {
   const session = (await getSession()) as {
     expires_at?: number;
     refresh_token?: string;

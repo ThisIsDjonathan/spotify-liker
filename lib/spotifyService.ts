@@ -21,6 +21,11 @@ class SpotifyService {
 
   async getUserPlaylists() {
     const playlists = await this.spotifyApi.getUserPlaylists();
+
+    if (!playlists || !playlists.body || !playlists.body.items || playlists.body.items.length === 0) {
+      return null;
+    }
+
     return playlists;
   }
 
@@ -31,6 +36,14 @@ class SpotifyService {
 
   async likeAll(email: string): Promise<LikeAllResult> {
     const playlists = await this.spotifyApi.getUserPlaylists();
+
+    if (!playlists) {
+      console.log(`No playlists found for user ${email}.`);
+      return {
+        playlistCount: 0,
+        songsCount: 0,
+      };
+    }
 
     console.log(
       `Found ${playlists.body.items.length} playlists for user ${email}.`,
