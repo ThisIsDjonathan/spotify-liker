@@ -6,8 +6,6 @@ export function buildUserMessage(
   data: any,
 ): string {
   switch (messageType) {
-    case UserMessageType.USER_LOCKED:
-      return `⏳ Whoa there, champ! We're still jammin' through your last request. Give us a sec before hitting it again 🎧🔥`;
     case UserMessageType.ADDED_TO_QUEUE:
       return `🎶 Alright! We're diving into your ${data.playlistCount} playlists like it's a Spotify buffet 🍽️. Hang tight, the magic is happening! ✨`;
     case UserMessageType.ALREADY_PROCESSED:

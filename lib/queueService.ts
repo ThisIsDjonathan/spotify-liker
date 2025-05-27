@@ -2,15 +2,12 @@ import { Queue } from "bullmq";
 import { Redis } from "ioredis";
 import { SpotifyLikerJob } from "@/types/SpotifyLikerJob";
 import { Job } from "bullmq";
+import { AppError } from "@/types/AppError";
 
 export class QueueService {
   private queue: Queue;
   private redisClient: Redis;
   public QUEUE_NAME = "like-songs-queue";
-  public USER_LOCKED_FOR_SECONDS = parseInt(
-    process.env.USER_LOCK_TTL || "60",
-    10,
-  );
 
   constructor() {
     if (!process.env.REDIS_HOST) {
@@ -64,24 +61,26 @@ export class QueueService {
     email: string,
     username: string,
     accessToken: string,
-  ): Promise<Job<SpotifyLikerJob> | null> {
+  ): Promise<Job<SpotifyLikerJob>> {
     if (!email || !accessToken) {
-      throw new Error("Email and access token are required to enqueue a job.");
+      throw new AppError({
+        message: "Email and access token are required to enqueue a job.",
+        statusCode: 400,
+      });
     }
 
-    const userLocked = await this.isUserLocked(email);
-    if (userLocked) {
-      console.log(`User ${email} is already locked. Skipping job enqueue.`);
-      return null;
-    } else {
-      await this.lockUser(email);
+    const currentJobsForUser = await this.getPendingJobsByEmail(email);
+    if (currentJobsForUser && currentJobsForUser.length > 0) {
+      throw new AppError({
+        message: `User ${email} already has a pending job. Wait a bit before trying again.`,
+        statusCode: 400,
+      })
     }
 
     const jobData = {
       email,
       username,
       accessToken,
-      lockUserKey: this.buildLockRedisKey(email),
     };
 
     const newJob = await this.queue.add(this.QUEUE_NAME, jobData);
@@ -90,24 +89,11 @@ export class QueueService {
     return newJob;
   }
 
-  async lockUser(email: string): Promise<string | null> {
-    const redisKey = this.buildLockRedisKey(email);
-    const record = await this.redisClient.set(
-      redisKey,
-      "locked",
-      "EX",
-      this.USER_LOCKED_FOR_SECONDS,
-    );
-    return record;
-  }
+  async getPendingJobsByEmail(email: string): Promise<Job[]> {
+    const jobs = await this.queue.getJobs(["waiting", "active", "delayed"]);
 
-  async isUserLocked(email: string): Promise<boolean> {
-    const redisKey = this.buildLockRedisKey(email);
-    const userLocked = await this.redisClient.get(redisKey);
-    return !!userLocked;
-  }
+    const userJobs = jobs.filter((job) => job.data.email === email);
 
-  buildLockRedisKey(email: string): string {
-    return `user:${email}:locked`;
+    return userJobs;
   }
 }

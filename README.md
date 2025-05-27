@@ -1,12 +1,13 @@
 # 🎧 DJ Spotify Liker
 
-> ⚠️⚠️⚠️⚠️ **Warning:** This is not fully working in production **yet**.
-> Spotify needs to approve the app on their side for it to be considered production-ready.
-> However, you can still clone the repo and try by yourself 🤘🏼
+> 🚨 Disclaimer: This is a weekend project I did for fun and to solve a problem I had, not a real product.
+
+> ⚠️⚠️⚠️⚠️ **Warning:** This is not fully working in production because Spotify didn't approve the app on their side 😔.
+> However, you can still clone the repo and try by yourself, just follow the steps bellow 🤘🏼😉
 
 Like all your saved songs on Spotify automatically — effortlessly and in the background.
 
-[🚀 Try the web app on Vercel](https://spotify-liker.vercel.app/)
+[🚀 Check the web app on Vercel](https://spotify-liker.vercel.app/)
 
 ---
 
@@ -30,7 +31,7 @@ This project uses:
 - [Coolify](https://coolify.io/) to run the worker
 - [Spotify Web API](https://developer.spotify.com/documentation/web-api/) to manage user playlists
 - [Redis](https://redis.io) to comunicate between the frontend and the worker
-- [MongoDB](https://www.mongodb.com) to store the user result (for debugging)
+- [MongoDB](https://www.mongodb.com) to store the user result (actually just because I wanted to play with mongo...)
 
 ---
 
@@ -64,7 +65,7 @@ Instead, by enqueuing the job **on the server side** of the Next.js app and **pr
 > Make sure you have **Docker**, **Docker Compose**, and **Bun** installed.
 > You will need Spotify Credentials that can be created [here](https://developer.spotify.com)
 
-1. Clone the repo and create your local environment file:
+1. Clone the repo and create your local environment file and set the values marked with ⚠️:
    ```bash
    cp .env.example .env
    ```

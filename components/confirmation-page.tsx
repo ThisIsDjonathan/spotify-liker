@@ -5,6 +5,13 @@ import { Music, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
+interface JobStatus {
+  status: string;
+  progress: number;
+  result: any;
+  failedReason?: string;
+}
+
 export default function ConfirmationPage({ email }: { email: string }) {
   const [userMessage, setUserMessage] = useState<string>(
     "We're liking all songs in your playlists in the background.",
@@ -13,80 +20,89 @@ export default function ConfirmationPage({ email }: { email: string }) {
   const [playlistCount, setPlaylistCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [title, setTitle] = useState<string>("Background Processing Started");
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
+
+  const fetchJobStatus = async (id: string) => {
+    try {
+      const res = await fetch(`/api/job-status?jobId=${id}`);
+      const data: JobStatus = await res.json();
+
+      if (res.status === 404) {
+        setTitle("Job not found");
+        setUserMessage("We couldn't find your background task. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      setProgress(data.progress || 0);
+
+      if (data.status === "completed") {
+        setIsLoading(false);
+        setTitle("All songs liked! 🎉");
+        setUserMessage("We've finished processing your playlists.");
+        clearInterval(pollingInterval!);
+      }
+
+      if (data.status === "failed") {
+        setIsLoading(false);
+        setTitle("Something went wrong 😢");
+        setUserMessage(data.failedReason || "The process failed.");
+        clearInterval(pollingInterval!);
+      }
+    } catch (err) {
+      console.error("Failed to fetch job status:", err);
+      setIsLoading(false);
+      setTitle("Error");
+      setUserMessage("An error occurred while fetching job status.");
+    }
+  };
 
   useEffect(() => {
-    if (playlistCount === 0) return;
-
-    let timer: NodeJS.Timeout;
-    let currentDelay = 1000;
-
-    const incrementProgress = () => {
-      setProgress((prevProgress) => {
-        const newProgress = prevProgress + 1;
-
-        if (newProgress >= playlistCount) {
-          setIsLoading(false);
-          return playlistCount;
-        }
-
-        // Increase the delay by n for the next iteration
-        currentDelay += 200;
-
-        // Schedule the next increment with the increased delay
-        timer = setTimeout(incrementProgress, currentDelay);
-
-        return newProgress;
-      });
-    };
-
-    // Start the first increment with a 1-second interval
-    timer = setTimeout(incrementProgress, currentDelay);
-
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [playlistCount]);
-
-  // This effect should only run once when the component mounts
-  useEffect(() => {
-    const startBackgroundProcess = async () => {
+    const startProcess = async () => {
       try {
-        const response = await fetch("/api/trigger-background-worker", {
+        const res = await fetch("/api/trigger-background-worker", {
           method: "POST",
         });
 
-        if (!response.ok) {
-          const responseBody = await response.json();
-          if (response.status === 429) {
+        if (!res.ok) {
+          const data = await res.json();
+          if (res.status === 429) {
             setTitle("We are still processing your playlists 😅");
-            setUserMessage(responseBody.userMessage);
+            setUserMessage(data.userMessage);
             return;
           }
-          throw new Error(
-            responseBody.userMessage || "Failed to start background process",
-          );
+
+          throw new Error(data.userMessage || "Failed to start background process");
         }
 
-        const responseBody = await response.json();
-        const count = responseBody.playlistCount || 0;
-        setPlaylistCount(count);
-        setUserMessage(
-          (prevMessage) => responseBody.userMessage || prevMessage,
-        );
-      } catch (error) {
-        console.error("Error starting background process:", error);
-        const errorMsg =
-          error instanceof Error ? error.message : "An error occurred 😱";
-        setUserMessage(errorMsg);
+        const data = await res.json();
+        const count = data.playlistCount || 0;
+        const jobId = data.jobId?.toString();
+
+        if (jobId) {
+          setJobId(jobId);
+          setPlaylistCount(count);
+          setUserMessage((prev) => data.userMessage || prev);
+          const interval = setInterval(() => fetchJobStatus(jobId), 2000);
+          setPollingInterval(interval);
+        } else {
+          throw new Error("No jobId returned");
+        }
+      } catch (err) {
+        console.error("Error starting background process:", err);
+        const msg = err instanceof Error ? err.message : "An error occurred 😱";
+        setUserMessage(msg);
+        setTitle("Error Starting Process 😢");
+        setIsLoading(false);
       }
     };
 
-    startBackgroundProcess();
-    // Empty dependency array ensures this effect runs only once on mount
+    startProcess();
   }, []);
 
   const progressPercentage =
-    playlistCount > 0 ? Math.min(100, (progress / playlistCount) * 100) : 0;
+    playlistCount > 0 ? Math.min(100, (progress / playlistCount) * 100) : progress;
 
   return (
     <div className="flex-1 flex items-center justify-center py-12">
@@ -112,7 +128,7 @@ export default function ConfirmationPage({ email }: { email: string }) {
             transition={{ delay: 0.4, duration: 0.7 }}
             className="text-2xl font-light mb-2 text-center tracking-wide"
           >
-            {title} {/* Dynamically display the title */}
+            {title}
           </motion.h1>
 
           <motion.div
@@ -123,13 +139,14 @@ export default function ConfirmationPage({ email }: { email: string }) {
           >
             <>
               <p>{userMessage}</p>
-              <p>
-                You&apos;ll receive an email at{" "}
-                <span className="text-[#1ED760]">{email}</span> when it&apos;s
-                done. You can safely close this tab 😉
-              </p>
+              {isLoading && (
+                <p>
+                  You&apos;ll receive an email at{" "}
+                  <span className="text-[#1ED760]">{email}</span> when it&apos;s done. You can safely close this tab 😉
+                </p>
+              )}
 
-              {playlistCount > 0 && (
+              {isLoading && (
                 <div className="w-full mt-4 space-y-2">
                   <div className="w-full bg-gray-700 rounded-full h-2.5 overflow-hidden">
                     <motion.div
@@ -140,21 +157,9 @@ export default function ConfirmationPage({ email }: { email: string }) {
                     />
                   </div>
                   <p className="text-xs text-gray-400">
-                    Processing {progress} of {playlistCount} playlists
-                    {isLoading && (
-                      <span className="inline-block ml-1">
-                        <span className="animate-pulse">...</span>
-                      </span>
-                    )}
+                    Progress: {progress}%
+                    <span className="inline-block ml-1 animate-pulse">...</span>
                   </p>
-                </div>
-              )}
-
-              {playlistCount === 0 && (
-                <div className="flex justify-center py-4">
-                  <div className="animate-pulse flex items-center justify-center w-12 h-12 rounded-full bg-[#1ED760]/10">
-                    <Music className="h-6 w-6 text-[#1ED760]" />
-                  </div>
                 </div>
               )}
             </>
@@ -174,13 +179,6 @@ export default function ConfirmationPage({ email }: { email: string }) {
               <ExternalLink className="h-4 w-4" /> Open Spotify Liked Songs
             </Link>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.7 }}
-            className="w-full mt-4"
-          ></motion.div>
         </div>
       </motion.div>
     </div>

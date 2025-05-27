@@ -17,11 +17,16 @@ const worker = new Worker(
   async (job) => {
     console.log(`Processing job ID: ${job.id} for user: ${job.data.email}`);
 
-    const { email, accessToken, lockUserKey, username } = job.data;
+    const { email, accessToken, username } = job.data;
+
+    job.updateProgress(1);
 
     try {
+
       const spotifyService = new SpotifyService(accessToken);
-      const result = await spotifyService.likeAll(email);
+      const result = await spotifyService.likeAll(email, (progress) =>
+        job.updateProgress(progress),
+      );
 
       console.log(
         `Successfully processed ${result.playlistCount} playlists and ${result.songsCount} tracks for user: ${email}`,
@@ -33,6 +38,9 @@ const worker = new Worker(
         result.playlistCount,
         result.songsCount,
       );
+
+      job.updateProgress(98);
+
       await emailService.sendEmail(email, emailSubject, emailMessage);
 
       await mongoDbService.saveResults(
@@ -41,6 +49,8 @@ const worker = new Worker(
         result.playlistCount,
         result.songsCount,
       );
+
+      job.updateProgress(100);
     } catch (error) {
       console.error(
         `Failed to process job ID: ${job.id} for user: ${email}`,
