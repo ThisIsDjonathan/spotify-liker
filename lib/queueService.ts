@@ -74,7 +74,7 @@ export class QueueService {
       throw new AppError({
         message: `User ${email} already has a pending job. Wait a bit before trying again.`,
         statusCode: 400,
-      })
+      });
     }
 
     const jobData = {

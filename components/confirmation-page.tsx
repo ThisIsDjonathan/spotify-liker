@@ -21,7 +21,9 @@ export default function ConfirmationPage({ email }: { email: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [title, setTitle] = useState<string>("Background Processing Started");
   const [jobId, setJobId] = useState<string | null>(null);
-  const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
+  const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(
+    null,
+  );
 
   const fetchJobStatus = async (id: string) => {
     try {
@@ -30,7 +32,9 @@ export default function ConfirmationPage({ email }: { email: string }) {
 
       if (res.status === 404) {
         setTitle("Job not found");
-        setUserMessage("We couldn't find your background task. Please try again.");
+        setUserMessage(
+          "We couldn't find your background task. Please try again.",
+        );
         setIsLoading(false);
         return;
       }
@@ -73,7 +77,9 @@ export default function ConfirmationPage({ email }: { email: string }) {
             return;
           }
 
-          throw new Error(data.userMessage || "Failed to start background process");
+          throw new Error(
+            data.userMessage || "Failed to start background process",
+          );
         }
 
         const data = await res.json();
@@ -102,7 +108,9 @@ export default function ConfirmationPage({ email }: { email: string }) {
   }, []);
 
   const progressPercentage =
-    playlistCount > 0 ? Math.min(100, (progress / playlistCount) * 100) : progress;
+    playlistCount > 0
+      ? Math.min(100, (progress / playlistCount) * 100)
+      : progress;
 
   return (
     <div className="flex-1 flex items-center justify-center py-12">
@@ -142,7 +150,8 @@ export default function ConfirmationPage({ email }: { email: string }) {
               {isLoading && (
                 <p>
                   You&apos;ll receive an email at{" "}
-                  <span className="text-[#1ED760]">{email}</span> when it&apos;s done. You can safely close this tab 😉
+                  <span className="text-[#1ED760]">{email}</span> when it&apos;s
+                  done. You can safely close this tab 😉
                 </p>
               )}
 

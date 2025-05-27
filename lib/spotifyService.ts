@@ -39,7 +39,10 @@ class SpotifyService {
     return me.body.display_name || me.body.email;
   }
 
-  async likeAll(email: string, updateProgress?: (progress: number) => void): Promise<LikeAllResult> {
+  async likeAll(
+    email: string,
+    updateProgress?: (progress: number) => void,
+  ): Promise<LikeAllResult> {
     const playlists = await this.spotifyApi.getUserPlaylists();
 
     if (updateProgress) updateProgress(3);
@@ -61,7 +64,9 @@ class SpotifyService {
 
     for (const playlist of playlists.body.items) {
       if (updateProgress) {
-        const percent = Math.floor(((playlistCount + 1) / playlists.body.items.length) * 100);
+        const percent = Math.floor(
+          ((playlistCount + 1) / playlists.body.items.length) * 100,
+        );
         updateProgress(percent);
       }
 

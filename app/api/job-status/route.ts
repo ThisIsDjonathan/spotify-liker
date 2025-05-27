@@ -31,12 +31,12 @@ export async function GET(request: Request) {
     if (error instanceof AppError) {
       return NextResponse.json(
         { error: error.message },
-        { status: error.statusCode }
+        { status: error.statusCode },
       );
     }
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -23,7 +23,7 @@ export async function POST() {
     const job = await queueService.enqueueJob(
       spotifyApi.email!,
       username,
-      spotifyApi.accessToken
+      spotifyApi.accessToken,
     );
 
     const responseObj = {
@@ -39,14 +39,14 @@ export async function POST() {
     if (error instanceof AppError) {
       return NextResponse.json(
         { error: error.message, userMessage: error.message },
-        { status: error.statusCode }
+        { status: error.statusCode },
       );
     }
 
     console.error("Unexpected error in POST handler:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

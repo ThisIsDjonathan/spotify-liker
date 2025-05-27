@@ -22,7 +22,6 @@ const worker = new Worker(
     job.updateProgress(1);
 
     try {
-
       const spotifyService = new SpotifyService(accessToken);
       const result = await spotifyService.likeAll(email, (progress) =>
         job.updateProgress(progress),
