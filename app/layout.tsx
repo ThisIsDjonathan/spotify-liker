@@ -40,14 +40,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${montserrat.variable}`}>
-      <body className="font-sans bg-black text-white">
+      <body className="font-sans bg-black text-white min-h-screen flex flex-col">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
         >
           <AnimatedBackground />
-          <div className="relative z-10">{children}</div>
+          <main className="flex-1 flex flex-col">{children}</main>
         </ThemeProvider>
         <Footer />
       </body>
