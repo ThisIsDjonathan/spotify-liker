@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Music, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import confetti from "canvas-confetti";
 
 interface JobStatus {
   status: string;
@@ -46,6 +47,12 @@ export default function ConfirmationPage({ email }: { email: string }) {
         setTitle("All songs liked! 🎉");
         setUserMessage("We've finished processing your playlists.");
         clearInterval(pollingInterval!);
+
+        confetti({
+          particleCount: 150,
+          spread: 100,
+          origin: { y: 0.6 },
+        });
       }
 
       if (data.status === "failed") {

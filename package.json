@@ -16,8 +16,10 @@
     "lint:prettier:fix": "prettier --write ."
   },
   "dependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/nodemailer": "^6.4.17",
     "bullmq": "^5.49.0",
+    "canvas-confetti": "^1.9.3",
     "framer-motion": "latest",
     "ioredis": "^5.6.1",
     "jose": "latest",
