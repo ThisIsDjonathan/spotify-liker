@@ -8,7 +8,6 @@ import Link from "next/link";
 interface JobStatus {
   status: string;
   progress: number;
-  result: any;
   failedReason?: string;
 }
 
@@ -20,6 +19,7 @@ export default function ConfirmationPage({ email }: { email: string }) {
   const [playlistCount, setPlaylistCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [title, setTitle] = useState<string>("Background Processing Started");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [jobId, setJobId] = useState<string | null>(null);
   const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(
     null,
